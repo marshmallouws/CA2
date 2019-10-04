@@ -32,7 +32,7 @@ public class PersonFacadeTest {
                 "dev",
                 "ax2",
                 EMF_Creator.Strategy.CREATE);
-        facade = PersonFacade.getFacadeExample(emf);
+        facade = PersonFacade.getPersonFacade(emf);
     }
 
     /*   **** HINT **** 
@@ -44,7 +44,7 @@ public class PersonFacadeTest {
     @BeforeAll
     public static void setUpClassV2() {
        emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST,Strategy.DROP_AND_CREATE);
-       facade = PersonFacade.getFacadeExample(emf);
+       facade = PersonFacade.getPersonFacade(emf);
     }
 
     @AfterAll
@@ -77,7 +77,7 @@ public class PersonFacadeTest {
     // TODO: Delete or change this method 
     @Test
     public void testAFacadeMethod() {
-        assertEquals(2, facade.getRenameMeCount(), "Expects two rows in the database");
+        assertEquals(2, facade.getPersonCount(), "Expects two rows in the database");
     }
 
 }

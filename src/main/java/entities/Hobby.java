@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import javax.persistence.ManyToMany;
 public class Hobby implements Serializable {
 
     @ManyToMany(mappedBy = "hobbies")
-    private List<Person> persons;
+    private List<Person> persons = new ArrayList<>();
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -29,6 +30,13 @@ public class Hobby implements Serializable {
     private Integer id;
     private String name;
     private String description;
+    
+    public Hobby() {}
+    
+    public Hobby(String name, String description) {
+        this.name = name; 
+        this.description = description;
+    }
 
     public Integer getId() {
         return id;
@@ -53,4 +61,14 @@ public class Hobby implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(Person person) {
+        persons.add(person);
+    }
+    
+    
 }

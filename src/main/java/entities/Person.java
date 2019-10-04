@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,9 +27,9 @@ public class Person implements Serializable {
     @ManyToOne
     private Address address;
     @OneToMany(mappedBy = "person")
-    private List<Phone> phones;
+    private List<Phone> phones = new ArrayList<>();
     @ManyToMany
-    private List<Hobby> hobbies;
+    private List<Hobby> hobbies = new ArrayList<>();
     
     public Person() {
     }
@@ -91,7 +92,7 @@ public class Person implements Serializable {
         return hobbies;
     }
 
-    public void setHobbies(List<Hobby> hobbies) {
-        this.hobbies = hobbies;
+    public void addHobby(Hobby hobby) {
+        hobbies.add(hobby);
     }
 }

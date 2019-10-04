@@ -25,7 +25,7 @@ public class PersonRessource {
                 "dev",
                 "ax2",
                 EMF_Creator.Strategy.CREATE);
-    private static final PersonFacade FACADE =  PersonFacade.getFacadeExample(EMF);
+    private static final PersonFacade FACADE =  PersonFacade.getPersonFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
             
     @GET
@@ -37,7 +37,7 @@ public class PersonRessource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getRenameMeCount() {
-        long count = FACADE.getRenameMeCount();
+        long count = FACADE.getPersonCount();
         //System.out.println("--------------->"+count);
         return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
     }
