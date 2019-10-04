@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -26,6 +27,8 @@ public class Person implements Serializable {
     private Address address;
     @OneToMany(mappedBy = "person")
     private List<Phone> phones;
+    @ManyToMany
+    private List<Hobby> hobbies;
     
     public Person() {
     }
@@ -66,5 +69,29 @@ public class Person implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }   
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
 }
