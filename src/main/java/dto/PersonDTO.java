@@ -22,23 +22,23 @@ public class PersonDTO {
     private List<HobbyDTO> hobbies;
     
     
-    public PersonDTO(Person p) {
-        this.name = p.getFirstname() + " " + p.getLastname();
-        this.email = p.getEmail();
-        this.address = p.getAddress().getStreet() 
-                + " " + p.getAddress().getCityInfo().getZip() 
-                + " " + p.getAddress().getCityInfo().getCity();
-        List<Phone> phons = p.getPhones();
-        List<Hobby> hobbs = p.getHobbies();
-        
-        for(Phone ph: phons) {
-            phones.add(new PhoneDTO(ph));
-        }
-        
-        for(Hobby h: hobbs) {
-            hobbies.add(new HobbyDTO(h));
-        }
-    }
+//    public PersonDTO(Person p) {
+//        this.name = p.getFirstname() + " " + p.getLastname();
+//        this.email = p.getEmail();
+//        this.address = p.getAddress().getStreet() 
+//                + " " + p.getAddress().getCityInfo().getZip() 
+//                + " " + p.getAddress().getCityInfo().getCity();
+//        List<Phone> phons = p.getPhones();
+//        List<Hobby> hobbs = p.getHobbies();
+//        
+//        for(Phone ph: phons) {
+//            phones.add(new PhoneDTO(ph));
+//        }
+//        
+//        for(Hobby h: hobbs) {
+//            hobbies.add(new HobbyDTO(h));
+//        }
+//    }
 
     public String getName() {
         return name;

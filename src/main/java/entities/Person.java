@@ -11,6 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 @Entity
@@ -21,39 +22,28 @@ public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String email;
     private String firstname;
     private String lastname;
-    @ManyToOne
-    private Address address;
-    @OneToMany(mappedBy = "person")
-    private List<Phone> phones = new ArrayList<>();
     @ManyToMany
     private List<Hobby> hobbies = new ArrayList<>();
     
+    @OneToOne(mappedBy = "person")
+    private InfoEntity infoEntity;
+    
     public Person() {
     }
-    
-    public Person(String email, String firstname, String lastname) {
-        this.email = email;
+
+    public Person(String firstname, String lastname) {
         this.firstname = firstname;
         this.lastname = lastname;
     }
-        
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstname() {
@@ -72,27 +62,12 @@ public class Person implements Serializable {
         this.lastname = lastname;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public List<Phone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-
     public List<Hobby> getHobbies() {
         return hobbies;
     }
 
-    public void addHobby(Hobby hobby) {
-        hobbies.add(hobby);
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
     }
+    
 }

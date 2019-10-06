@@ -21,15 +21,15 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Hobby implements Serializable {
 
-    @ManyToMany(mappedBy = "hobbies")
-    private List<Person> persons = new ArrayList<>();
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String description;
+    
+    @ManyToMany(mappedBy = "hobbies")
+    private List<Person> persons = new ArrayList<>();
     
     public Hobby() {}
     

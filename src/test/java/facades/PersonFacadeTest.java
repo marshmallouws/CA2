@@ -54,30 +54,30 @@ public class PersonFacadeTest {
 
     // Setup the DataBase in a known state BEFORE EACH TEST
     //TODO -- Make sure to change the script below to use YOUR OWN entity class
-    @BeforeEach
-    public void setUp() {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.persist(new Person("Some txt", "More text", "last"));
-            em.persist(new Person("aaa", "bbb", "ccc"));
+//    @BeforeEach
+//    public void setUp() {
+//        EntityManager em = emf.createEntityManager();
+//        try {
+//            em.getTransaction().begin();
+//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+//            em.persist(new Person("Some txt", "More text", "last"));
+//            em.persist(new Person("aaa", "bbb", "ccc"));
+//
+//            em.getTransaction().commit();
+//        } finally {
+//            em.close();
+//        }
+//    }
 
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
-
-    @AfterEach
-    public void tearDown() {
-//        Remove any data after each test was run
-    }
-
-    // TODO: Delete or change this method 
-    @Test
-    public void testAFacadeMethod() {
-        assertEquals(2, facade.getPersonCount(), "Expects two rows in the database");
-    }
+//    @AfterEach
+//    public void tearDown() {
+////        Remove any data after each test was run
+//    }
+//
+//    // TODO: Delete or change this method 
+//    @Test
+//    public void testAFacadeMethod() {
+//        assertEquals(2, facade.getPersonCount(), "Expects two rows in the database");
+//    }
 
 }
