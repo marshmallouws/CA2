@@ -54,6 +54,7 @@ public class PersonFacade {
         }
     }
 
+    // Should be changed to not be a TypedQuery + try-with-resources
     public List<PersonDTO> findByHobby(CityInfo h) {
         EntityManager em = getEntityManager();
         try {
