@@ -70,4 +70,12 @@ public class Person implements Serializable {
         this.hobbies = hobbies;
     }
     
+    public InfoEntity getInfoEntity() {
+        return infoEntity;
+    }
+    
+    public void setInfoEntity(InfoEntity info) {
+        this.infoEntity = info;
+    }
+    
 }

@@ -32,7 +32,6 @@ public class InfoEntity implements Serializable {
     private List<Phone> phones;
     @ManyToOne
     private Address address;
-
     
     public String getEmail() {
         return email;

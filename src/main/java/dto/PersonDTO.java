@@ -8,7 +8,10 @@ package dto;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import entities.InfoEntity;
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  *
@@ -18,27 +21,32 @@ public class PersonDTO {
     private String name;
     private String email;
     private String address;
-    private List<PhoneDTO> phones;
-    private List<HobbyDTO> hobbies;
+    private List<PhoneDTO> phones = new ArrayList<>();
+    private List<HobbyDTO> hobbies = new ArrayList<>();
     
     
-//    public PersonDTO(Person p) {
-//        this.name = p.getFirstname() + " " + p.getLastname();
-//        this.email = p.getEmail();
-//        this.address = p.getAddress().getStreet() 
-//                + " " + p.getAddress().getCityInfo().getZip() 
-//                + " " + p.getAddress().getCityInfo().getCity();
-//        List<Phone> phons = p.getPhones();
-//        List<Hobby> hobbs = p.getHobbies();
-//        
-//        for(Phone ph: phons) {
-//            phones.add(new PhoneDTO(ph));
-//        }
-//        
-//        for(Hobby h: hobbs) {
-//            hobbies.add(new HobbyDTO(h));
-//        }
-//    }
+    public PersonDTO(Person p) {
+        InfoEntity info = p.getInfoEntity();
+        
+        this.name = p.getFirstname() + " " + p.getLastname();
+        this.email = info.getEmail();
+        this.address = info.getAddress().getStreet() 
+                + " " + info.getAddress().getAdditionalInfo() 
+                + " " + info.getAddress().getCityInfo().getZip() 
+                + " " + info.getAddress().getCityInfo().getCity();
+        List<Phone> ph = info.getPhones();
+        List<Hobby> ho = p.getHobbies();
+        
+        for(Phone phone: ph) {
+            phones.add(new PhoneDTO(phone));
+        }
+        
+        for(Hobby h: ho) {
+            hobbies.add(new HobbyDTO(h));
+        }
+        
+        
+    }
 
     public String getName() {
         return name;
