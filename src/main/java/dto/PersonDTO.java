@@ -5,6 +5,8 @@
  */
 package dto;
 
+import entities.Address;
+import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -18,42 +20,42 @@ import java.util.List;
  * @author Bitten
  */
 public class PersonDTO {
-    private String name;
+    private String firstname;
+    private String lastname;
     private String email;
-    private String address;
+    private String street;
+    private String additionalinfo;
+    private String city;
+    private int zip;
     private List<PhoneDTO> phones = new ArrayList<>();
     private List<HobbyDTO> hobbies = new ArrayList<>();
     
-    
-    public PersonDTO(Person p) {
-        InfoEntity info = p.getInfoEntity();
-        
-        this.name = p.getFirstname() + " " + p.getLastname();
-        this.email = info.getEmail();
-        this.address = info.getAddress().getStreet() 
-                + " " + info.getAddress().getAdditionalInfo() 
-                + " " + info.getAddress().getCityInfo().getZip() 
-                + " " + info.getAddress().getCityInfo().getCity();
-        List<Phone> ph = info.getPhones();
-        List<Hobby> ho = p.getHobbies();
-        
-        for(Phone phone: ph) {
-            phones.add(new PhoneDTO(phone));
-        }
-        
-        for(Hobby h: ho) {
-            hobbies.add(new HobbyDTO(h));
-        }
-        
-        
+    public PersonDTO(Person p, List<HobbyDTO> h, InfoEntity e, Address a, CityInfo c, List<PhoneDTO> ph) {
+        this.firstname = p.getFirstname();
+        this.lastname = p.getLastname();
+        this.email = e.getEmail();
+        this.street = a.getStreet();
+        this.additionalinfo = a.getAdditionalInfo();
+        this.city = c.getCity();
+        this.zip = c.getZip();
+        this.hobbies = h;
+        this.phones = ph;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -64,12 +66,36 @@ public class PersonDTO {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getAdditionalinfo() {
+        return additionalinfo;
+    }
+
+    public void setAdditionalinfo(String additionalinfo) {
+        this.additionalinfo = additionalinfo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
     }
 
     public List<PhoneDTO> getPhones() {
@@ -87,4 +113,5 @@ public class PersonDTO {
     public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
+    
 }

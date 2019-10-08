@@ -12,11 +12,27 @@ import entities.Phone;
  * @author Annika
  */
 public class PhoneDTO {
-    private String phone;
+    private String number;
     private String description;
     
     public PhoneDTO(Phone p) {
-        this.phone = p.getNumber();
+        this.number = p.getNumber();
         this.description = p.getDescription();
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String phone) {
+        this.number = phone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

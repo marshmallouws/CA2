@@ -1,23 +1,25 @@
 package facades;
 
+import dto.HobbyDTO;
 import dto.PersonDTO;
+import dto.PhoneDTO;
 import entities.Address;
 import entities.CityInfo;
 import entities.InfoEntity;
 import entities.Hobby;
+import entities.Phone;
 import entities.Person;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import utils.EMF_Creator;
+import java.lang.reflect.*;
+import java.util.Arrays;
 
-/**
- *
- * Rename Class to a relevant name Add add relevant facade methods
- */
 public class PersonFacade {
 
     private static PersonFacade instance;
@@ -54,22 +56,50 @@ public class PersonFacade {
         }
     }
 
-    // Should be changed to not be a TypedQuery + try-with-resources
-    public List<PersonDTO> findByHobby(CityInfo h) {
+    /*
+    The query in the following method returns the same person multiple times
+    (once for each phone number the person has). Therefore, there's a check
+    on whether the given id already exists in the res-list to avoid duplicates.
+    The query should be changed, however, I couldn't find out how.
+    */
+    public List<PersonDTO> findByHobby(String name) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<Person> query
-                    = em.createQuery("SELECT person, hobby, address, info, cityinfo, phone "
-                            + "FROM Person person, Hobby hobby, Address address, InfoEntity info, CityInfo cityinfo, Phone phone "
-                            + "WHERE cityinfo.zip = :zip", Person.class);
-                            
-            query.setParameter("zip", h.getZip());
-            
-            List<Person> q = query.getResultList();
-            List<PersonDTO> res = new ArrayList<>();
+            Query query
+                    = em.createQuery("SELECT p, h, i, a, c, ph FROM Person p "
+                            + "JOIN p.hobbies h "
+                            + "JOIN p.infoEntity i "
+                            + "JOIN i.address a "
+                            + "JOIN a.cityInfo c "
+                            + "JOIN i.phones ph "
+                            + "WHERE h.name = :name");
 
-            for (Person p : q) {
-                res.add(new PersonDTO(p));
+            query.setParameter("name", name);
+            List<Object[]> q = query.getResultList();
+            List<PersonDTO> res = new ArrayList<>();
+            int lastSeenID = 0;
+            for (Object o[] : q) {
+                Person p = (Person) o[0];
+                Hobby l = (Hobby) o[1];
+                InfoEntity e = (InfoEntity) o[2];
+                Address a = (Address) o[3];
+                CityInfo c = (CityInfo) o[4];
+                Phone ph = (Phone) o[5];
+               
+                
+                List<PhoneDTO> phones = new ArrayList<>();
+                List<HobbyDTO> hobbies = new ArrayList<>();
+                
+                phones.add(new PhoneDTO(ph));
+                hobbies.add(new HobbyDTO(l));
+
+                if (lastSeenID == p.getId()) {
+                    res.get(res.size()-1).getPhones().add(new PhoneDTO(ph));
+                } else {
+                    res.add(new PersonDTO(p, hobbies, e, a, c, phones));
+                }
+
+                lastSeenID = p.getId();
             }
 
             return res;
@@ -78,26 +108,49 @@ public class PersonFacade {
             em.close();
         }
     }
-
+    
     /*
-    public List<PersonDTO> findByHobby(Hobby h) {
-        EntityManager em = getEntityManager();
-        List<PersonDTO> res = new ArrayList<>();
+    Should be altered to no enter duplicate hobbies, address and cityinfo
+    */
+    public void createPerson(String firstname, String lastname, List<HobbyDTO> hdto, String email, String street, String additional, String city, int zip, List<PhoneDTO> pdto) {
+        EntityManager em = getEntityManager(); 
         try {
-            TypedQuery<Person> query
-                    = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h = :hobbyName", Person.class);
-            query.setParameter("hobbyName", h);
-            List<Person> persons = query.getResultList();
+            em.getTransaction().begin();
+            Person p = new Person(firstname, lastname);
+            InfoEntity e = new InfoEntity(email);
+            Address a = new Address(street, additional);
+            CityInfo c = new CityInfo(zip, city);
+            List<Hobby> hobbies = new ArrayList<>();
             
-            for(Person p: persons) {
-                res.add(new PersonDTO(p));
+            for(HobbyDTO h: hdto) {
+                Hobby hobby = new Hobby(h.getName(), h.getDescription());
+                hobbies.add(hobby);
+                em.persist(hobby);
             }
+            
+            for(PhoneDTO ph: pdto) {
+                Phone phone = new Phone(ph.getNumber(), ph.getDescription());
+                phone.setInfoEntity(e);
+                em.persist(phone);
+            }
+            
+            e.setPerson(p);
+            e.setAddress(a);
+            a.setCityInfo(c);
+            p.setHobbies(hobbies);
+            
+            em.persist(p);
+            em.persist(e);
+            em.persist(a);
+            em.persist(c);
+            
+            em.getTransaction().commit();
+            
         } finally {
             em.close();
         }
-        
-        return res;
-    }*/
+    }
+
     public List<Person> findByZip(CityInfo cityInfo) {
         EntityManager em = getEntityManager();
         //List<PersonDTO> res = new ArrayList<>();
@@ -116,90 +169,4 @@ public class PersonFacade {
             em.close();
         }
     }
-
-    public static void main(String[] args) {
-        emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.DROP_AND_CREATE);
-
-        EntityManager em = emf.createEntityManager();
-        PersonFacade personfacade = new PersonFacade();
-
-        try {
-            em.getTransaction().begin();
-            Person p = new Person("Peter", "Petersen");
-            Person p1 = new Person("Lars", "Larsen");
-            Person p2 = new Person("Hans", "Hansen");
-
-            InfoEntity pi = new InfoEntity("peter@mail.dk");
-            InfoEntity p1i = new InfoEntity("lars@mail.dk");
-            InfoEntity p2i = new InfoEntity("hans@mail.dk");
-
-            Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-            Hobby h1 = new Hobby("Ridning", "Meget sjovere end badminton!");
-
-            Address pa = new Address("Sømoseparken", "80, st., 37");
-            Address p1a = new Address("Sorrentovej", "1");
-            Address p2a = new Address("Engvej", "40");
-
-            CityInfo p12ac = new CityInfo(2300, "København");
-            CityInfo pac = new CityInfo(2750, "Ballerup");
-
-            List<Hobby> phobbies = new ArrayList<>();
-            phobbies.add(h);
-            phobbies.add(h1);
-
-            List<Hobby> p1h = new ArrayList<>();
-            p1h.add(h);
-
-            List<Hobby> p2h = new ArrayList<>();
-            p2h.add(h1);
-            
-            pi.setPerson(p);
-            p1i.setPerson(p1);
-            p2i.setPerson(p2);
-
-//            p.setInfoEntity(pi);
-//            p1.setInfoEntity(p1i);
-//            p2.setInfoEntity(p2i);
-
-            p.setHobbies(phobbies);
-            p1.setHobbies(p1h);
-            p2.setHobbies(p2h);
-
-            pa.setCityInfo(pac);
-            p1a.setCityInfo(p12ac);
-            p2a.setCityInfo(p12ac);
-
-            pi.setAddress(pa);
-            p1i.setAddress(p1a);
-            p2i.setAddress(p2a);
-
-            em.persist(p);
-            em.persist(p1);
-            em.persist(p2);
-            em.persist(pi);
-            em.persist(p1i);
-            em.persist(p2i);
-            em.persist(h);
-            em.persist(h1);
-            em.persist(pa);
-            em.persist(p1a);
-            em.persist(p2a);
-            em.persist(p12ac);
-            em.persist(pac);
-
-            em.getTransaction().commit();
-            
-            List<PersonDTO> persondto = personfacade.findByHobby(pac);
-            System.out.println(persondto.size());
-            
-            for(PersonDTO dto: persondto) {
-                System.out.println(dto.getName());
-            }
-        } finally {
-            em.close();
-        }
-        
-        
-    }
-
 }

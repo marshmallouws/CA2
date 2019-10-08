@@ -10,12 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Martin
  */
 @Entity
+@Table(name = "infoentity")
 public class InfoEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

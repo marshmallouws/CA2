@@ -12,9 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name = "person")
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
 public class Person implements Serializable {
 
@@ -76,6 +78,24 @@ public class Person implements Serializable {
     
     public void setInfoEntity(InfoEntity info) {
         this.infoEntity = info;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if(obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        
+        Person p = (Person) obj;
+        
+        if(this.id == p.getId()) {
+            return true;
+        }
+        return false;
     }
     
 }

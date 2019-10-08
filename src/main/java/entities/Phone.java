@@ -14,12 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Bitten
  */
 @Entity
+@Table(name = "phone")
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,5 +63,13 @@ public class Phone implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }    
+    }
+
+    public InfoEntity getInfoEntity() {
+        return infoEntity;
+    }
+    
+    public void setInfoEntity(InfoEntity inf) {
+        infoEntity = inf;
+    }
 }
