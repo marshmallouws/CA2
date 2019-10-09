@@ -139,7 +139,7 @@ public class PersonFacade {
             info.setAddress(address);
             address.setCityInfo(city);
             person.setHobbies(hobb);
-
+            person.setInfoEntity(info);
             em.persist(person);
             em.persist(info);
             em.persist(address);
