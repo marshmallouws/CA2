@@ -108,6 +108,8 @@ public class DevData {
         } finally {
             em.close();
         }
+        
+        
         /*
         List<HobbyDTO> h = new ArrayList<>();
         h.add(new HobbyDTO(new Hobby("Ridning", "Yay")));

@@ -27,8 +27,8 @@ public class PersonDTO {
     private String additionalinfo;
     private String city;
     private int zip;
-    private List<PhoneDTO> phones = new ArrayList<>();
-    private List<HobbyDTO> hobbies = new ArrayList<>();
+    private List<PhoneDTO> phones;
+    private List<HobbyDTO> hobbies;
     private int id;
     
     public PersonDTO() {}

@@ -56,14 +56,36 @@ public class PersonFacade {
         }
     }
 
-    public List<Person> findByHobby(String hobbyname) {
+    public List<PersonDTO> findByHobby(String hobbyname) {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobbyname", Person.class);
             query.setParameter("hobbyname", hobbyname);
             List<Person> persons = query.getResultList();
+            List<PersonDTO> res = new ArrayList<>();
+            
+            for(Person p: persons) {
+                InfoEntity inf = p.getInfoEntity();
+                Address add = inf.getAddress();
+                CityInfo city = add.getCityInfo();
+                List<Hobby> hobbies = p.getHobbies();
+                List<HobbyDTO> ho = new ArrayList<>();
+                List<Phone> phones = inf.getPhones();
+                List<PhoneDTO> pdto = new ArrayList<>();
+                
+                for(Hobby h: hobbies) {
+                    ho.add(new HobbyDTO(h));
+                }
+                
+                for(Phone po: phones) {
+                    pdto.add(new PhoneDTO(po));
+                }
+                
+                res.add(new PersonDTO(p, ho, inf, add, city, pdto));
+                
+            }
 
-            return persons;
+            return res;
 
         } finally {
             em.close();
