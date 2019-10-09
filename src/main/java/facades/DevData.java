@@ -117,6 +117,8 @@ public class DevData {
             em.close();
         }
         
+        personfacade.getFromPerson("Ridning");
+        
         List<HobbyDTO> h = new ArrayList<>();
         h.add(new HobbyDTO(new Hobby("Ridning", "Yay")));
         List<PhoneDTO> phodeto = new ArrayList<>();

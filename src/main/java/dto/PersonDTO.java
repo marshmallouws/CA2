@@ -29,6 +29,7 @@ public class PersonDTO {
     private int zip;
     private List<PhoneDTO> phones = new ArrayList<>();
     private List<HobbyDTO> hobbies = new ArrayList<>();
+    private int id;
     
     public PersonDTO(Person p, List<HobbyDTO> h, InfoEntity e, Address a, CityInfo c, List<PhoneDTO> ph) {
         this.firstname = p.getFirstname();
@@ -40,6 +41,18 @@ public class PersonDTO {
         this.zip = c.getZip();
         this.hobbies = h;
         this.phones = ph;
+    }
+    
+    public PersonDTO(String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.street = street;
+        this.additionalinfo = additionalinfo;
+        this.city = city;
+        this.zip = zip;
+        phones = ph;
+        hobbies = h;
     }
 
     public String getFirstname() {
@@ -114,4 +127,11 @@ public class PersonDTO {
         this.hobbies = hobbies;
     }
     
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
 }
