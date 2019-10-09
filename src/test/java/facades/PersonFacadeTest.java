@@ -55,7 +55,6 @@ public class PersonFacadeTest {
         See below for how to use these files. This is our RECOMENDED strategy
      */
     static Person ptest = new Person("Stallone", "Stalloni");
-    static InfoEntity pitest = new InfoEntity("test@mail.dk");
     
     @BeforeAll
     public static void setUpClassV2() {

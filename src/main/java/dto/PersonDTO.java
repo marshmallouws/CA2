@@ -77,8 +77,8 @@ public class PersonDTO {
         this.zip = zip;
         phones = ph;
         hobbies = h;
-    }
-     */
+    }*/
+     
     public String getFirstname() {
         return firstname;
     }
