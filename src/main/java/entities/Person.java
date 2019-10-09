@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -30,7 +31,7 @@ public class Person implements Serializable {
     @ManyToMany
     private List<Hobby> hobbies = new ArrayList<>();
     
-    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "person")
     private InfoEntity infoEntity;
     
     public Person() {

@@ -104,28 +104,25 @@ public class DevData {
 
             em.getTransaction().commit();
 
-            List<PersonDTO> someything = personfacade.findByHobby("Badminton");
-            System.out.println(someything.size());
-
-            for (PersonDTO som : someything) {
-                System.out.println(som.getFirstname());
-                for(PhoneDTO pho: som.getPhones()) {
-                    System.out.println(pho.getNumber());
-                }
-            }
+            
         } finally {
             em.close();
         }
-        
-        personfacade.getFromPerson("Ridning");
-        
+        /*
         List<HobbyDTO> h = new ArrayList<>();
         h.add(new HobbyDTO(new Hobby("Ridning", "Yay")));
         List<PhoneDTO> phodeto = new ArrayList<>();
         phodeto.add(new PhoneDTO(new Phone("4321", "Lortetelefon")));
         
+        PersonDTO p = new PersonDTO(new Person("Lotte", "Flottesen"), 
+                h, new InfoEntity("lotte@mail.dk"),
+                new Address("Lottevej", "100"), new CityInfo(2600, "Lotteby")
+                , phodeto);
+        
+        personfacade.createPerson(p);
+        
         personfacade.createPerson("Annika", "Ehlers", h, "annika@mail.dk", "Hejvej", "80", "Ballerup", 2750, phodeto);
-
+        */
     }
     
 }

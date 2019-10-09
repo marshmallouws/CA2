@@ -55,78 +55,15 @@ public class PersonFacade {
             em.close();
         }
     }
-    
-    public List<Person> getFromPerson(String hobbyname) {
+
+    public List<Person> findByHobby(String hobbyname) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobbyName", Person.class);
-            query.setParameter("hobbyName", hobbyname);
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobbyname", Person.class);
+            query.setParameter("hobbyname", hobbyname);
             List<Person> persons = query.getResultList();
-            
-            for(Person p: persons) {
-                List<Hobby> hobbies = p.getHobbies();
-                for(Hobby h: hobbies) {
-                    System.out.println(p.getFirstname() + ": " + h.getName());
-                }
-                p.getInfoEntity();
-                //System.out.println(hobbies.get(0).getName());
-                //System.out.println(p.getInfoEntity().getEmail());
-            }
-            
+
             return persons;
-            
-        } finally {
-            em.close();
-        }
-    }
-
-    /*
-    The query in the following method returns the same person multiple times
-    (once for each phone number the person has). Therefore, there's a check
-    on whether the given id already exists in the res-list to avoid duplicates.
-    The query should be changed, however, I couldn't find out how.
-     */
-    public List<PersonDTO> findByHobby(String name) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query
-                    = em.createQuery("SELECT p, h, i, a, c, ph FROM Person p "
-                            + "JOIN p.hobbies h "
-                            + "JOIN p.infoEntity i "
-                            + "JOIN i.address a "
-                            + "JOIN a.cityInfo c "
-                            + "JOIN i.phones ph "
-                            + "WHERE h.name = :name");
-
-            query.setParameter("name", name);
-            List<Object[]> q = query.getResultList();
-            List<PersonDTO> res = new ArrayList<>();
-            int lastSeenID = 0;
-            for (Object o[] : q) {
-                Person p = (Person) o[0];
-                Hobby l = (Hobby) o[1];
-                InfoEntity e = (InfoEntity) o[2];
-                Address a = (Address) o[3];
-                CityInfo c = (CityInfo) o[4];
-                Phone ph = (Phone) o[5];
-
-                List<PhoneDTO> phones = new ArrayList<>();
-                List<HobbyDTO> hobbies = new ArrayList<>();
-
-                phones.add(new PhoneDTO(ph));
-                hobbies.add(new HobbyDTO(l));
-
-                if (lastSeenID == p.getId()) {
-                    res.get(res.size() - 1).getPhones().add(new PhoneDTO(ph));
-                } else {
-                    PersonDTO dto = new PersonDTO(p, hobbies, e, a, c, phones);
-                    dto.setId(p.getId());
-                    res.add(dto);
-                }
-                lastSeenID = p.getId();
-            }
-
-            return res;
 
         } finally {
             em.close();
@@ -136,47 +73,50 @@ public class PersonFacade {
     /*
     Should be altered to no enter duplicate hobbies, address and cityinfo
      */
-    public void createPerson(String firstname, String lastname, List<HobbyDTO> hdto, String email, String street, String additional, String city, int zip, List<PhoneDTO> pdto) {
+    public void createPerson(PersonDTO p) {
         EntityManager em = getEntityManager();
+
         try {
             em.getTransaction().begin();
-            Person p = new Person(firstname, lastname);
-            InfoEntity e = new InfoEntity(email);
-            Address a = new Address(street, additional);
-            CityInfo c = new CityInfo(zip, city);
-            List<Hobby> hobbies = new ArrayList<>();
+            Person person = new Person(p.getFirstname(), p.getLastname());
+            InfoEntity info = new InfoEntity(p.getEmail());
+            Address address = new Address(p.getStreet(), p.getAdditionalinfo());
+            CityInfo city = new CityInfo(p.getZip(), p.getCity());
 
-            for (HobbyDTO h : hdto) {
+            List<HobbyDTO> hobbies = p.getHobbies();
+            List<PhoneDTO> phones = p.getPhones();
+            List<Hobby> hobb = new ArrayList<>();
+
+            for (HobbyDTO h : hobbies) {
                 Hobby hobby = new Hobby(h.getName(), h.getDescription());
-                hobbies.add(hobby);
+                hobb.add(hobby);
                 em.persist(hobby);
             }
 
-            for (PhoneDTO ph : pdto) {
+            for (PhoneDTO ph : phones) {
                 Phone phone = new Phone(ph.getNumber(), ph.getDescription());
-                phone.setInfoEntity(e);
+                phone.setInfoEntity(info);
                 em.persist(phone);
             }
 
-            e.setPerson(p);
-            e.setAddress(a);
-            a.setCityInfo(c);
-            p.setHobbies(hobbies);
+            info.setPerson(person);
+            info.setAddress(address);
+            address.setCityInfo(city);
+            person.setHobbies(hobb);
 
-            em.persist(p);
-            em.persist(e);
-            em.persist(a);
-            em.persist(c);
+            em.persist(person);
+            em.persist(info);
+            em.persist(address);
+            em.persist(city);
 
             em.getTransaction().commit();
-
         } finally {
-            em.close();
+
         }
     }
-    
+
     public void deletePerson(int id) {
-        
+
     }
 
     public List<Person> findByZip(CityInfo cityInfo) {

@@ -31,6 +31,8 @@ public class PersonDTO {
     private List<HobbyDTO> hobbies = new ArrayList<>();
     private int id;
     
+    public PersonDTO() {}
+    
     public PersonDTO(Person p, List<HobbyDTO> h, InfoEntity e, Address a, CityInfo c, List<PhoneDTO> ph) {
         this.firstname = p.getFirstname();
         this.lastname = p.getLastname();
@@ -43,6 +45,7 @@ public class PersonDTO {
         this.phones = ph;
     }
     
+    /*
     public PersonDTO(String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {
         this.firstname = firstname;
         this.lastname = lastname;
@@ -54,6 +57,7 @@ public class PersonDTO {
         phones = ph;
         hobbies = h;
     }
+    */
 
     public String getFirstname() {
         return firstname;
