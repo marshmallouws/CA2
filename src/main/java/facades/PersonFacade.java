@@ -60,7 +60,8 @@ public class PersonFacade {
         EntityManager em = getEntityManager();
         try {
             List<PersonDTO> dto = new ArrayList();
-            for(Person person : em.createQuery("SELECT p FROM Person p", Person.class).getResultList()){
+            List<Person> persons = em.createQuery("SELECT p FROM Person p", Person.class).getResultList();
+            for(Person person : persons){
                 dto.add(new PersonDTO(person));
             }
             return dto;

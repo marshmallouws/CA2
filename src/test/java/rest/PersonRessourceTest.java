@@ -77,32 +77,5 @@ public class PersonRessourceTest {
 //            em.close();
 //        }
 //    }
-    @Disabled
-    @Test
-    public void testServerIsUp() {
-        System.out.println("Testing is server UP");
-        given().when().get("/persons").then().statusCode(200);
-    }
-   
-    @Disabled
-    @Test
-    public void testDummyMsg() throws Exception {
-        given()
-        .contentType("application/json")
-        .get("/persons/").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("msg", equalTo("Hello World"));   
-    }
     
-    @Disabled
-    @Test
-    public void testCount() throws Exception {
-        given()
-        .contentType("application/json")
-        .get("/persons/count").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(2));   
-    }
 }

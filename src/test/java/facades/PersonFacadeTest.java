@@ -1,9 +1,22 @@
 package facades;
 
+import dto.PersonDTO;
+import entities.Address;
+import entities.CityInfo;
+import entities.Hobby;
+import entities.InfoEntity;
 import utils.EMF_Creator;
 import entities.Person;
+import entities.Phone;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsNot.not;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,10 +54,73 @@ public class PersonFacadeTest {
         The file config.properties and the corresponding helper class utils.Settings is added just to do that. 
         See below for how to use these files. This is our RECOMENDED strategy
      */
+    static Person ptest = new Person("Stallone", "Stalloni");
+    
     @BeforeAll
     public static void setUpClassV2() {
-       emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST,Strategy.DROP_AND_CREATE);
-       facade = PersonFacade.getPersonFacade(emf);
+        emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.DROP_AND_CREATE);
+        facade = PersonFacade.getPersonFacade(emf);
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Person p = new Person("Peter", "Petersen");
+            
+            InfoEntity pi = new InfoEntity("peter@mail.dk");
+
+
+            Phone phone = new Phone("12341", "Home");
+
+
+            Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
+     
+
+            Address pa = new Address("Sømoseparken", "80, st., 37");
+        
+
+            CityInfo p12ac = new CityInfo(2300, "København");
+           
+
+            List<Hobby> phobbies = new ArrayList<>();
+            phobbies.add(h);
+
+
+           
+
+            p.setInfoEntity(pi);
+            
+            phone.setInfoEntity(pi);
+ 
+
+            p.setHobbies(phobbies);
+          
+
+            pa.setCityInfo(p12ac);
+  
+
+            pi.setAddress(pa);
+            
+            ptest.setInfoEntity(pi);
+            ptest.setHobbies(phobbies);
+
+            em.persist(phone);
+  
+            em.persist(p);
+      
+            em.persist(pi);
+       
+            em.persist(h);
+          
+            em.persist(pa);
+     
+            em.persist(p12ac);
+      
+
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
     @AfterAll
@@ -68,7 +144,6 @@ public class PersonFacadeTest {
 //            em.close();
 //        }
 //    }
-
 //    @AfterEach
 //    public void tearDown() {
 ////        Remove any data after each test was run
@@ -79,5 +154,16 @@ public class PersonFacadeTest {
 //    public void testAFacadeMethod() {
 //        assertEquals(2, facade.getPersonCount(), "Expects two rows in the database");
 //    }
+    @Test
+    public void getAll_personsInDB_returnsPersonListNotEmpty() {
+        List<PersonDTO> list = facade.getAllPersons();
+        assertThat(list, is(not(empty())));
+    }
+    
+    @Test
+    public void createPerson_validPerson_idNotNull() {
+        PersonDTO pers = new PersonDTO(ptest);
+        assertThat(facade.createPerson(pers).getId(), is(not(nullValue())));
+    }
 
 }
