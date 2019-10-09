@@ -5,6 +5,7 @@
  */
 package facades;
 
+import entities.InfoEntity;
 import entities.Person;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -41,5 +42,17 @@ public class DatabaseFacade {
     public Object addToDB(Object o){
         Class type = o.getClass();
         return type.cast(o);
+    }
+    
+    //  Not used - ended up not returning the actual object ref. Known problem.. I don't know how to fix it
+    public InfoEntity getInfoEntity(int id) {
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            InfoEntity IE = (InfoEntity)em.createQuery("SELECT i FROM InfoEntity i WHERE i.person.id = " + id).getSingleResult();
+            return IE;
+        } finally {
+            em.close();
+        }
     }
 }

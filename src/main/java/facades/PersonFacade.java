@@ -153,6 +153,47 @@ public class PersonFacade {
         }
     }
 
+    public PersonDTO updatePerson(PersonDTO p) {
+        EntityManager em = emf.createEntityManager();
+       
+        try {
+            InfoEntity IE = (InfoEntity)em.createQuery("SELECT i FROM InfoEntity i WHERE i.person.id = " + p.getId()).getSingleResult();
+
+            List<Hobby> hobbyList = new ArrayList();
+            
+            for (HobbyDTO h : p.getHobbies()) {
+                hobbyList.add(new Hobby(h.getName(), h.getDescription()));
+            }
+            
+            
+            em.getTransaction().begin();
+            
+                for (PhoneDTO pdto : p.getPhones()) {
+                    Phone phone = new Phone(pdto.getNumber(), pdto.getDescription());
+                    phone.setInfoEntity(IE);
+                    em.persist(phone);
+                }
+            
+                IE.getPerson().setFirstname(p.getFirstname());
+                IE.getPerson().setLastname(p.getLastname());
+                IE.setEmail(p.getEmail());
+                IE.getPerson().setHobbies(hobbyList);
+                IE.getAddress().setStreet(p.getStreet());
+                IE.getAddress().setAdditionalInfo(p.getAdditionalinfo());
+                IE.getAddress().getCityInfo().setCity(p.getCity());
+                IE.getAddress().getCityInfo().setZip(p.getZip());
+                
+                IE.getPerson().setInfoEntity(IE);
+                
+            em.getTransaction().commit();
+
+            return new PersonDTO(IE.getPerson());
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public void deletePerson(int id) {
 
     }

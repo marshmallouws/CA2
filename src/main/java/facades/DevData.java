@@ -125,6 +125,15 @@ public class DevData {
         
         personfacade.createPerson("Annika", "Ehlers", h, "annika@mail.dk", "Hejvej", "80", "Ballerup", 2750, phodeto);
         */
-    }
+        
+        List<PhoneDTO> pdto = new ArrayList();
+        pdto.add(new PhoneDTO(new Phone("12312313", "fake number lol")));
+        List<HobbyDTO> hdto = new ArrayList();
+        hdto.add(new HobbyDTO(new Hobby("Hash", "Basket hobby alligevel")));
+        
+       
+        PersonDTO pDTO = new PersonDTO(1, "Jim", "Daggerthuggert", "jim@daggerthuggert.dk", "HUggertvej", "info info", "Lyngby", 2800, pdto, hdto);
+        personfacade.updatePerson(pDTO);
+        }
     
 }

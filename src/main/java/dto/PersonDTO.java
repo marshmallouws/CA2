@@ -66,8 +66,9 @@ public class PersonDTO {
         this.phones = phons;
     }
 
-    /*
-    public PersonDTO(String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {
+    
+    public PersonDTO(int id, String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -78,7 +79,7 @@ public class PersonDTO {
         phones = ph;
         hobbies = h;
     }
-     */
+
     public String getFirstname() {
         return firstname;
     }
