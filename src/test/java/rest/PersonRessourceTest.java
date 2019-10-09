@@ -41,7 +41,6 @@ public class PersonRessourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Person r1,r2;
     
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -121,6 +120,8 @@ public class PersonRessourceTest {
             em.persist(pa);
      
             em.persist(p12ac);
+            
+           
       
 
             em.getTransaction().commit();
@@ -157,5 +158,16 @@ public class PersonRessourceTest {
                 .then()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("id", is(not(nullValue())));
+    }
+    
+    @Test
+    public void updatePerson_validPerson_nameChanged() throws Exception {
+        String payload = "{\"id\":\"1\",\"firstname\":\"Søren\",\"lastname\":\"Hansen\",\"email\":\"test@test.dk\",\"street\": \"Sømoseparken\", \"additionalinfo\": \"80, st., 37\", \"city\": \"Ballerup\",\"zip\": 2750, \"phones\": [{ \"number\": \"12341\", \"description\": \"Home\" }, { \"number\": \"12342\", \"description\": \"Home\" }],\"hobbies\": [ { \"name\": \"Ridning\", \"description\": \"Meget sjovere end badminton!\" }, { \"name\": \"Badminton\", \"description\": \"Det er virkelig kedeligt\" } ]}";
+        given().contentType(ContentType.JSON)
+                .body(payload)
+                .put("/person")
+                .then()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("firstname", is("Søren"));
     }
 }

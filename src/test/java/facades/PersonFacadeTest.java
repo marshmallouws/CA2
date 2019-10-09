@@ -20,6 +20,7 @@ import static org.hamcrest.core.IsNot.not;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ public class PersonFacadeTest {
         try {
             em.getTransaction().begin();
 
-            Person p = new Person("Peter", "Petersen");
+      
             
             InfoEntity pi = new InfoEntity("peter@mail.dk");
 
@@ -88,12 +89,12 @@ public class PersonFacadeTest {
 
            
 
-            p.setInfoEntity(pi);
+            ptest.setInfoEntity(pi);
             
             phone.setInfoEntity(pi);
  
 
-            p.setHobbies(phobbies);
+            ptest.setHobbies(phobbies);
           
 
             pa.setCityInfo(p12ac);
@@ -101,12 +102,12 @@ public class PersonFacadeTest {
 
             pi.setAddress(pa);
             
-            ptest.setInfoEntity(pi);
+            pi.setPerson(ptest);
             ptest.setHobbies(phobbies);
 
             em.persist(phone);
   
-            em.persist(p);
+            em.persist(ptest);
       
             em.persist(pi);
        
@@ -115,7 +116,7 @@ public class PersonFacadeTest {
             em.persist(pa);
      
             em.persist(p12ac);
-      
+          
 
             em.getTransaction().commit();
         } finally {
@@ -166,6 +167,19 @@ public class PersonFacadeTest {
         assertThat(facade.createPerson(dto), is(not(nullValue())));
     }
     
+    @Test
+    public void editPerson_validPerson_newValueAdded() {
+        try{
+        ptest.setFirstname("Lars");
+        PersonDTO edited = new PersonDTO(ptest); 
+        edited.setId(ptest.getInfoEntity().getId());
+        edited = facade.updatePerson(edited);
+        assertThat(edited.getFirstname(), is("Lars"));
+        }catch(Exception e){
+            e.printStackTrace();
+            fail("exception thrown");
+        }
+    }
     
 
 }
