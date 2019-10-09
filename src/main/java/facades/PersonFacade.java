@@ -55,6 +55,15 @@ public class PersonFacade {
             em.close();
         }
     }
+    
+     public List<PersonDTO> getAllPersons() {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT p FROM Person p", PersonDTO.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public List<PersonDTO> findByHobby(String hobbyname) {
         EntityManager em = getEntityManager();
