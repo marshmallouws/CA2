@@ -37,7 +37,7 @@ public class PersonRessource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response create(PersonDTO entity) {
-        return Response.ok().entity(GSON.toJson("")).build();
+        return Response.ok().entity(GSON.toJson(FACADE.createPerson(entity))).build();
 
     }
     

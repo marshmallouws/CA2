@@ -108,7 +108,7 @@ public class PersonFacade {
     /*
     Should be altered to no enter duplicate hobbies, address and cityinfo
      */
-    public void createPerson(PersonDTO p) {
+    public PersonDTO createPerson(PersonDTO p) {
         EntityManager em = getEntityManager();
 
         try {
@@ -145,6 +145,8 @@ public class PersonFacade {
             em.persist(city);
 
             em.getTransaction().commit();
+            
+            return new PersonDTO(person);
         } finally {
 
         }
