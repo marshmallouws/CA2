@@ -14,6 +14,11 @@ import entities.Phone;
 public class PhoneDTO {
     private String number;
     private String description;
+
+    public PhoneDTO() {
+    }
+    
+    
     
     public PhoneDTO(Phone p) {
         this.number = p.getNumber();

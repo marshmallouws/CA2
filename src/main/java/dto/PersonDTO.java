@@ -66,7 +66,6 @@ public class PersonDTO {
         this.phones = phons;
     }
 
-    
     public PersonDTO(int id, String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {
         this.id = id;
         this.firstname = firstname;
