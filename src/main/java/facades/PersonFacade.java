@@ -9,6 +9,8 @@ import entities.InfoEntity;
 import entities.Hobby;
 import entities.Phone;
 import entities.Person;
+import exceptions.CityInfoNotFoundException;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -19,6 +21,7 @@ import javax.persistence.TypedQuery;
 import utils.EMF_Creator;
 import java.lang.reflect.*;
 import java.util.Arrays;
+import javax.persistence.NoResultException;
 
 public class PersonFacade {
 
@@ -52,7 +55,7 @@ public class PersonFacade {
             Query query = em.createQuery("SELECT COUNT(p) FROM Person p JOIN p.hobbies h WHERE h.name = :hobbyname");
             query.setParameter("hobbyname", hobbyname);
             Long res = (Long) query.getSingleResult();
-            
+
             return res;
         } finally {
             em.close();
@@ -95,12 +98,25 @@ public class PersonFacade {
     /*
     Should be altered to no enter duplicate hobbies, address and cityinfo
      */
-    public PersonDTO createPerson(PersonDTO p) {
+    public PersonDTO createPerson(PersonDTO p) throws CityInfoNotFoundException {
         EntityManager em = getEntityManager();
 
         try {
+            CityInfo city = null;
+            try {
+                city = CityFacade.getCityFacade(emf).getCity(p.getZip());
+                System.out.println(city.getId());
+            } catch (NoResultException e) {
+                e.printStackTrace();
+            }
+            
+            if(city == null) {
+                throw new CityInfoNotFoundException("Given zip is not found");
+            }
+            
             em.getTransaction().begin();
-            Address address = new Address(p.getStreet(), p.getAdditionalinfo(),new CityInfo(p.getZip(), p.getCity()));
+            Address address = new Address(p.getStreet(), p.getAdditionalinfo());
+            address.setCityInfo(city);
             List<Phone> phones = new ArrayList();
             List<Hobby> hobbies = new ArrayList();
 
@@ -112,10 +128,10 @@ public class PersonFacade {
                 phones.add(new Phone(ph.getNumber(), ph.getDescription()));
             }
 
-            Person person = new Person(p.getEmail(), p.getFirstname(), p.getLastname(),hobbies,phones,address);
+            Person person = new Person(p.getEmail(), p.getFirstname(), p.getLastname(), hobbies, phones, address);
             em.persist(person);
             em.getTransaction().commit();
-
+            System.out.println(person.getAddress().getCityInfo().getId());
             return new PersonDTO(person);
         } finally {
 
@@ -133,12 +149,11 @@ public class PersonFacade {
                 hobbyList.add(new Hobby(h.getName(), h.getDescription()));
             }
 
-      
             List<Phone> phoneList = new ArrayList();
             for (PhoneDTO pdto : p.getPhones()) {
                 phoneList.add(new Phone(pdto.getNumber(), pdto.getDescription()));
             }
-            
+
             em.getTransaction().begin();
             person.setFirstname(p.getFirstname());
             person.setLastname(p.getLastname());
@@ -175,4 +190,17 @@ public class PersonFacade {
             em.close();
         }
     }
+    /*
+    public static void main(String[] args) throws CityInfoNotFoundException {
+        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+
+        Person p = new Person("svend@mail.dk", "Prins", "Henrik");
+        List<Hobby> h = new ArrayList<>();
+        List<Phone> ph = new ArrayList<>();
+        p.setHobbies(h);
+        p.setPhones(ph);
+        p.setAddress(new Address("vingevje", "230", new CityInfo(9900, "Ballerup")));
+        p.setId(1);
+        getPersonFacade(emf2).createPerson(new PersonDTO(p));
+    }*/
 }

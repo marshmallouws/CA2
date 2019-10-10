@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import utils.EMF_Creator;
 
@@ -49,25 +50,34 @@ public class CityFacade {
         }
     }
     
+    public CityInfo getCity(int zip) throws NoResultException {
+        EntityManager em = getEntityManager();
+        try {
+            //if(em.createQuery("SELECT c FROM CityInfo c WHERE c.zip = :zip", CityInfo.class).getSingleResult() != null)
+            TypedQuery<CityInfo> inf =
+                    em.createQuery("SELECT c FROM CityInfo c WHERE c.zip = :zip", CityInfo.class);
+            inf.setParameter("zip", zip);
+            return inf.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+    
     
     public void addCities() throws FileNotFoundException, IOException {
         EntityManager em = getEntityManager();
         System.out.println();
         BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\zipcodes.txt"));
+        em.getTransaction().begin();
         
         String row = "";
         while((row = reader.readLine()) != null) {
             String[] data = row.split(" ", 2);
-            em.getTransaction().begin();
             em.persist(new CityInfo(Integer.parseInt(data[0]), data[1]));
-            em.getTransaction().commit();
+            
         }
+        em.getTransaction().commit();
         em.close();
         reader.close();
     }
-    
-    public static void main(String[] args) throws IOException {
-        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        getCityFacade(emf2).addCities();
-    } 
 }

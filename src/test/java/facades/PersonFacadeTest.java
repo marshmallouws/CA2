@@ -8,6 +8,8 @@ import entities.InfoEntity;
 import utils.EMF_Creator;
 import entities.Person;
 import entities.Phone;
+import exceptions.CityInfoNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -30,11 +32,12 @@ import utils.EMF_Creator.DbSelector;
 import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 public class PersonFacadeTest {
 
     private static EntityManagerFactory emf;
     private static PersonFacade facade;
+    private static CityFacade cf;
 
     public PersonFacadeTest() {
     }
@@ -46,7 +49,7 @@ public class PersonFacadeTest {
                 "jdbc:mysql://localhost:3307/ca2_test",
                 "dev",
                 "ax2",
-                EMF_Creator.Strategy.CREATE);
+                EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = PersonFacade.getPersonFacade(emf);
     }
 
@@ -59,16 +62,19 @@ public class PersonFacadeTest {
     static Person ptest;
     
     @BeforeAll
-    public static void setUpClassV2() {
+    public static void setUpClassV2() throws IOException {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = PersonFacade.getPersonFacade(emf);
-
+        cf = CityFacade.getCityFacade(emf);
+        
         EntityManager em = emf.createEntityManager();
         try {
+            cf.addCities();
+            CityInfo city = cf.getCity(2300);
             em.getTransaction().begin();
             Phone phone = new Phone("12341", "Home");
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-            Address pa = new Address("Sømoseparken", "80, st., 37", new CityInfo(2300, "København"));
+            Address pa = new Address("Sømoseparken", "80, st., 37", city);
             List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
             List<Phone> phones = new ArrayList();
@@ -96,7 +102,7 @@ public class PersonFacadeTest {
     }
     
     @Test
-    public void createPerson_validPerson_idNotNull() {
+    public void createPerson_validPerson_idNotNull() throws CityInfoNotFoundException {
         PersonDTO dto = new PersonDTO(ptest);
         assertThat(facade.createPerson(dto), is(not(nullValue())));
     }

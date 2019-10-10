@@ -30,7 +30,7 @@ public class Address implements Serializable {
     private Integer id;
     private String street;
     private String additionalInfo;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private CityInfo cityInfo;
 
     

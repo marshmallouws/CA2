@@ -3,15 +3,15 @@ package rest;
 import entities.Address;
 import entities.CityInfo;
 import entities.Hobby;
-import entities.InfoEntity;
 import entities.Person;
 import entities.Phone;
-import facades.PersonFacade;
+import facades.CityFacade;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import utils.EMF_Creator.DbSelector;
 import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 public class PersonRessourceTest {
 
     private static final int SERVER_PORT = 7777;
@@ -64,14 +64,19 @@ public class PersonRessourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
-
+        try {
+            CityFacade.getCityFacade(emf).addCities();
+        } catch (IOException ex) {
+            
+        }
+        CityInfo c = CityFacade.getCityFacade(emf).getCity(2300);
         
         EntityManager em = emf.createEntityManager();
          try {
             em.getTransaction().begin();
             Phone phone = new Phone("12341", "Home");
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-            Address pa = new Address("Sømoseparken", "80, st., 37", new CityInfo(2300, "København"));
+            Address pa = new Address("Sømoseparken", "80, st., 37", c);
             List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
             List<Phone> phones = new ArrayList();
