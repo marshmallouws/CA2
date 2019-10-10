@@ -46,11 +46,14 @@ public class PersonFacade {
         return emf.createEntityManager();
     }
 
-    public long getPersonCount() {
-        EntityManager em = emf.createEntityManager();
+    public long getPersonHobbyCount(String hobbyname) {
+        EntityManager em = getEntityManager();
         try {
-            long renameMeCount = (long) em.createQuery("SELECT COUNT(r) FROM Person r").getSingleResult();
-            return renameMeCount;
+            Query query = em.createQuery("SELECT COUNT(p) FROM Person p JOIN p.hobbies h WHERE h.name = :hobbyname");
+            query.setParameter("hobbyname", hobbyname);
+            Long res = (Long) query.getSingleResult();
+            
+            return res;
         } finally {
             em.close();
         }
