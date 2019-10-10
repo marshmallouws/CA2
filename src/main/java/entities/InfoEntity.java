@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,9 +18,8 @@ import javax.persistence.Table;
  *
  * @author Martin
  */
-@Entity
-@Table(name = "infoentity")
-public class InfoEntity implements Serializable {
+@MappedSuperclass
+public abstract class InfoEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -27,78 +27,44 @@ public class InfoEntity implements Serializable {
     private Integer id;
     private String email;
 
-    @OneToOne
-    private Person person;
-    @OneToOne
-    private Company company;
-    @OneToMany(mappedBy = "infoEntity", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Phone> phones;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
-    
+
+    public Integer getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
     }
 
     public List<Phone> getPhones() {
         return phones;
     }
 
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-
     public Address getAddress() {
         return address;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     public void setAddress(Address address) {
         this.address = address;
     }
     
-    public InfoEntity() {
-    }
-
-    public InfoEntity(String email, Person person, Company company, List<Phone> phones, Address address) {
-        this.email = email;
-        this.person = person;
-        this.company = company;
-        this.phones = phones;
-        this.address = address;
-    }
-
     
-    public InfoEntity(String email) {
-        this.email = email;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     
 }

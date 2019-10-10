@@ -51,7 +51,7 @@ public class PersonRessourceTest {
         return GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
     }
 
-    static Person ptest = new Person("Stallone", "Stalloni");
+    static Person ptest;
     
     @BeforeAll
     public static void setUpClass() {
@@ -67,63 +67,19 @@ public class PersonRessourceTest {
 
         
         EntityManager em = emf.createEntityManager();
-        try {
+         try {
             em.getTransaction().begin();
-
-            Person p = new Person("Peter", "Petersen");
-            
-            InfoEntity pi = new InfoEntity("peter@mail.dk");
-
-
             Phone phone = new Phone("12341", "Home");
-
-
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-     
-
-            Address pa = new Address("Sømoseparken", "80, st., 37");
-        
-
-            CityInfo p12ac = new CityInfo(2300, "København");
-           
-
-            List<Hobby> phobbies = new ArrayList<>();
+            Address pa = new Address("Sømoseparken", "80, st., 37", new CityInfo(2300, "København"));
+            List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
-
-
-           
-
-            p.setInfoEntity(pi);
-            
-            phone.setInfoEntity(pi);
- 
-
-            p.setHobbies(phobbies);
-          
-
-            pa.setCityInfo(p12ac);
+            List<Phone> phones = new ArrayList();
+            phones.add(phone);
   
-
-            pi.setAddress(pa);
+            ptest = new Person("test@test.dk","Stallone", "Stalloni", phobbies, phones, pa);
+            em.persist(ptest);
             
-            ptest.setInfoEntity(pi);
-            ptest.setHobbies(phobbies);
-
-            em.persist(phone);
-  
-            em.persist(p);
-      
-            em.persist(pi);
-       
-            em.persist(h);
-          
-            em.persist(pa);
-     
-            em.persist(p12ac);
-            
-           
-      
-
             em.getTransaction().commit();
         } finally {
             em.close();

@@ -45,7 +45,7 @@ public class PersonRessource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response edit(PersonDTO entity) {
-            return Response.ok().entity(GSON.toJson(FACADE.updatePerson(entity))).build();
+           return Response.ok().entity(GSON.toJson(FACADE.updatePerson(entity))).build();
     }
  
 }
