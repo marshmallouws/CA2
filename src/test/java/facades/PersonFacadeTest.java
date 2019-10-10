@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.Settings;
 import utils.EMF_Creator.DbSelector;
@@ -55,7 +56,7 @@ public class PersonFacadeTest {
         The file config.properties and the corresponding helper class utils.Settings is added just to do that. 
         See below for how to use these files. This is our RECOMENDED strategy
      */
-    static Person ptest = new Person("Stallone", "Stalloni");
+    static Person ptest;
     
     @BeforeAll
     public static void setUpClassV2() {
@@ -65,59 +66,17 @@ public class PersonFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-
-      
-            
-            InfoEntity pi = new InfoEntity("peter@mail.dk");
-
-
             Phone phone = new Phone("12341", "Home");
-
-
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-     
-
-            Address pa = new Address("Sømoseparken", "80, st., 37");
-        
-
-            CityInfo p12ac = new CityInfo(2300, "København");
-           
-
-            List<Hobby> phobbies = new ArrayList<>();
+            Address pa = new Address("Sømoseparken", "80, st., 37", new CityInfo(2300, "København"));
+            List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
-
-
-           
-
-            ptest.setInfoEntity(pi);
-            
-            phone.setInfoEntity(pi);
- 
-
-            ptest.setHobbies(phobbies);
-          
-
-            pa.setCityInfo(p12ac);
+            List<Phone> phones = new ArrayList();
+            phones.add(phone);
   
-
-            pi.setAddress(pa);
-            
-            pi.setPerson(ptest);
-            ptest.setHobbies(phobbies);
-
-            em.persist(phone);
-  
+            ptest = new Person("test@test.dk","Stallone", "Stalloni", phobbies, phones, pa);
             em.persist(ptest);
-      
-            em.persist(pi);
-       
-            em.persist(h);
-          
-            em.persist(pa);
-     
-            em.persist(p12ac);
-          
-
+            
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -129,32 +88,7 @@ public class PersonFacadeTest {
 //        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
     }
 
-    // Setup the DataBase in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the script below to use YOUR OWN entity class
-//    @BeforeEach
-//    public void setUp() {
-//        EntityManager em = emf.createEntityManager();
-//        try {
-//            em.getTransaction().begin();
-//            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-//            em.persist(new Person("Some txt", "More text", "last"));
-//            em.persist(new Person("aaa", "bbb", "ccc"));
-//
-//            em.getTransaction().commit();
-//        } finally {
-//            em.close();
-//        }
-//    }
-//    @AfterEach
-//    public void tearDown() {
-////        Remove any data after each test was run
-//    }
-//
-//    // TODO: Delete or change this method 
-//    @Test
-//    public void testAFacadeMethod() {
-//        assertEquals(2, facade.getPersonCount(), "Expects two rows in the database");
-//    }
+
     @Test
     public void getAll_personsInDB_returnsPersonListNotEmpty() {
         List<PersonDTO> list = facade.getAllPersons();
@@ -169,16 +103,10 @@ public class PersonFacadeTest {
     
     @Test
     public void editPerson_validPerson_newValueAdded() {
-        try{
-        ptest.setFirstname("Lars");
         PersonDTO edited = new PersonDTO(ptest); 
-        edited.setId(ptest.getInfoEntity().getId());
+        edited.setFirstname("Lars");
         edited = facade.updatePerson(edited);
         assertThat(edited.getFirstname(), is("Lars"));
-        }catch(Exception e){
-            e.printStackTrace();
-            fail("exception thrown");
-        }
     }
     
 

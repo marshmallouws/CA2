@@ -21,34 +21,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "person")
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
-public class Person implements Serializable {
+public class Person extends InfoEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private String firstname;
     private String lastname;
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Hobby> hobbies = new ArrayList<>();
     
-    @OneToOne(mappedBy = "person")
-    private InfoEntity infoEntity;
-    
     public Person() {
     }
 
-    public Person(String firstname, String lastname) {
+    public Person(String email, String firstname, String lastname) {
+        setEmail(email);
         this.firstname = firstname;
         this.lastname = lastname;
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    
+    public Person(String email, String firstname, String lastname, List<Hobby> hobbies, List<Phone> phones, Address address) {
+        setEmail(email);
+        setHobbies(hobbies);
+        setPhones(phones);
+        setAddress(address);
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 
     public String getFirstname() {
@@ -74,31 +69,6 @@ public class Person implements Serializable {
     public void setHobbies(List<Hobby> hobbies) {
         this.hobbies = hobbies;
     }
-    
-    public InfoEntity getInfoEntity() {
-        return infoEntity;
-    }
-    
-    public void setInfoEntity(InfoEntity info) {
-        this.infoEntity = info;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if(obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        
-        Person p = (Person) obj;
-        
-        if(this.id == p.getId()) {
-            return true;
-        }
-        return false;
-    }
+
     
 }

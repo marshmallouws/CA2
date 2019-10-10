@@ -100,37 +100,20 @@ public class PersonFacade {
 
         try {
             em.getTransaction().begin();
-            Person person = new Person(p.getFirstname(), p.getLastname());
-            InfoEntity info = new InfoEntity(p.getEmail());
-            Address address = new Address(p.getStreet(), p.getAdditionalinfo());
-            CityInfo city = new CityInfo(p.getZip(), p.getCity());
+            Address address = new Address(p.getStreet(), p.getAdditionalinfo(),new CityInfo(p.getZip(), p.getCity()));
+            List<Phone> phones = new ArrayList();
+            List<Hobby> hobbies = new ArrayList();
 
-            List<HobbyDTO> hobbies = p.getHobbies();
-            List<PhoneDTO> phones = p.getPhones();
-            List<Hobby> hobb = new ArrayList<>();
-
-            for (HobbyDTO h : hobbies) {
-                Hobby hobby = new Hobby(h.getName(), h.getDescription());
-                hobb.add(hobby);
-                em.persist(hobby);
+            for (HobbyDTO h : p.getHobbies()) {
+                hobbies.add(new Hobby(h.getName(), h.getDescription()));
             }
 
-            for (PhoneDTO ph : phones) {
-                Phone phone = new Phone(ph.getNumber(), ph.getDescription());
-                phone.setInfoEntity(info);
-                em.persist(phone);
+            for (PhoneDTO ph : p.getPhones()) {
+                phones.add(new Phone(ph.getNumber(), ph.getDescription()));
             }
 
-            info.setPerson(person);
-            info.setAddress(address);
-            address.setCityInfo(city);
-            person.setHobbies(hobb);
-            person.setInfoEntity(info);
+            Person person = new Person(p.getEmail(), p.getFirstname(), p.getLastname(),hobbies,phones,address);
             em.persist(person);
-            em.persist(info);
-            em.persist(address);
-            em.persist(city);
-
             em.getTransaction().commit();
 
             return new PersonDTO(person);
@@ -143,36 +126,33 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
 
         try {
-            InfoEntity IE = (InfoEntity) em.createQuery("SELECT i FROM InfoEntity i WHERE i.person.id = " + p.getId()).getSingleResult();
+            Person person = (Person) em.createQuery("SELECT p FROM Person p WHERE p.id = " + p.getId()).getSingleResult();
 
             List<Hobby> hobbyList = new ArrayList();
-
             for (HobbyDTO h : p.getHobbies()) {
                 hobbyList.add(new Hobby(h.getName(), h.getDescription()));
             }
 
-            em.getTransaction().begin();
-
+      
+            List<Phone> phoneList = new ArrayList();
             for (PhoneDTO pdto : p.getPhones()) {
-                Phone phone = new Phone(pdto.getNumber(), pdto.getDescription());
-                phone.setInfoEntity(IE);
-                em.persist(phone);
+                phoneList.add(new Phone(pdto.getNumber(), pdto.getDescription()));
             }
-
-            IE.getPerson().setFirstname(p.getFirstname());
-            IE.getPerson().setLastname(p.getLastname());
-            IE.setEmail(p.getEmail());
-            IE.getPerson().setHobbies(hobbyList);
-            IE.getAddress().setStreet(p.getStreet());
-            IE.getAddress().setAdditionalInfo(p.getAdditionalinfo());
-            IE.getAddress().getCityInfo().setCity(p.getCity());
-            IE.getAddress().getCityInfo().setZip(p.getZip());
-
-            IE.getPerson().setInfoEntity(IE);
+            
+            em.getTransaction().begin();
+            person.setFirstname(p.getFirstname());
+            person.setLastname(p.getLastname());
+            person.setEmail(p.getEmail());
+            person.setHobbies(hobbyList);
+            person.setPhones(phoneList);
+            person.getAddress().setStreet(p.getStreet());
+            person.getAddress().setAdditionalInfo(p.getAdditionalinfo());
+            person.getAddress().getCityInfo().setCity(p.getCity());
+            person.getAddress().getCityInfo().setZip(p.getZip());
 
             em.getTransaction().commit();
 
-            return new PersonDTO(IE.getPerson());
+            return new PersonDTO(person);
         } finally {
             em.close();
         }

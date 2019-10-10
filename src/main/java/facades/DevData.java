@@ -33,13 +33,6 @@ public class DevData {
 
         try {
             em.getTransaction().begin();
-            Person p = new Person("Peter", "Petersen");
-            Person p1 = new Person("Lars", "Larsen");
-            Person p2 = new Person("Hans", "Hansen");
-
-            InfoEntity pi = new InfoEntity("peter@mail.dk");
-            InfoEntity p1i = new InfoEntity("lars@mail.dk");
-            InfoEntity p2i = new InfoEntity("hans@mail.dk");
 
             Phone phone = new Phone("12341", "Home");
             Phone phone1 = new Phone("12342", "Home");
@@ -48,12 +41,9 @@ public class DevData {
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
             Hobby h1 = new Hobby("Ridning", "Meget sjovere end badminton!");
 
-            Address pa = new Address("Sømoseparken", "80, st., 37");
-            Address p1a = new Address("Sorrentovej", "1");
-            Address p2a = new Address("Engvej", "40");
-
-            CityInfo p12ac = new CityInfo(2300, "København");
-            CityInfo pac = new CityInfo(2750, "Ballerup");
+            Address pa = new Address("Sømoseparken", "80, st., 37", new CityInfo(2300, "København"));
+            Address p1a = new Address("Sorrentovej", "1", new CityInfo(2300, "København"));
+            Address p2a = new Address("Engvej", "40", new CityInfo(2750, "Ballerup"));
 
             List<Hobby> phobbies = new ArrayList<>();
             phobbies.add(h);
@@ -64,43 +54,22 @@ public class DevData {
 
             List<Hobby> p2h = new ArrayList<>();
             p2h.add(h1);
+            
+            List<Phone> plist1 = new ArrayList();
+            plist1.add(phone);
 
-            pi.setPerson(p);
-            p1i.setPerson(p1);
-            p2i.setPerson(p2);
+            List<Phone> plist2 = new ArrayList();
+            plist2.add(phone1);
+            plist2.add(phone2);
 
-            phone.setInfoEntity(pi);
-            phone1.setInfoEntity(pi);
-            phone2.setInfoEntity(p1i);
-
-            p.setHobbies(phobbies);
-            p1.setHobbies(p1h);
-            p2.setHobbies(p2h);
-
-            pa.setCityInfo(pac);
-            p1a.setCityInfo(p12ac);
-            p2a.setCityInfo(p12ac);
-
-            pi.setAddress(pa);
-            p1i.setAddress(p1a);
-            p2i.setAddress(p2a);
-
-            em.persist(phone);
-            em.persist(phone1);
-            em.persist(phone2);
+            
+            Person p = new Person("test1@test1.dk","Peter", "Petersen", phobbies, plist1,pa);
+            Person p1 = new Person("test2@test2.dk","Lars", "Larsen", p1h, plist2,p1a);
+            Person p2 = new Person("test3@test3.dk","Hans", "Hansen", p2h, plist1, p2a);
+            
             em.persist(p);
             em.persist(p1);
             em.persist(p2);
-            em.persist(pi);
-            em.persist(p1i);
-            em.persist(p2i);
-            em.persist(h);
-            em.persist(h1);
-            em.persist(pa);
-            em.persist(p1a);
-            em.persist(p2a);
-            em.persist(p12ac);
-            em.persist(pac);
 
             em.getTransaction().commit();
 
@@ -125,7 +94,7 @@ public class DevData {
         
         personfacade.createPerson("Annika", "Ehlers", h, "annika@mail.dk", "Hejvej", "80", "Ballerup", 2750, phodeto);
         */
-        
+        /*
         List<PhoneDTO> pdto = new ArrayList();
         pdto.add(new PhoneDTO(new Phone("12312313", "fake number lol")));
         List<HobbyDTO> hdto = new ArrayList();
@@ -133,7 +102,7 @@ public class DevData {
         
        
         PersonDTO pDTO = new PersonDTO(1, "Jim", "Daggerthuggert", "jim@daggerthuggert.dk", "HUggertvej", "info info", "Lyngby", 2800, pdto, hdto);
-        personfacade.updatePerson(pDTO);
+        personfacade.updatePerson(pDTO);*/
         }
     
 }

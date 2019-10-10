@@ -49,21 +49,22 @@ public class PersonDTO {
     public PersonDTO(Person p) {
         this.firstname = p.getFirstname();
         this.lastname = p.getLastname();
-        this.email = p.getInfoEntity().getEmail();
-        this.street = p.getInfoEntity().getAddress().getStreet();
-        this.additionalinfo = p.getInfoEntity().getAddress().getAdditionalInfo();
-        this.city = p.getInfoEntity().getAddress().getCityInfo().getCity();
-        this.zip = p.getInfoEntity().getAddress().getCityInfo().getZip();
+        this.email = p.getEmail();
+        this.street = p.getAddress().getStreet();
+        this.additionalinfo = p.getAddress().getAdditionalInfo();
+        this.city = p.getAddress().getCityInfo().getCity();
+        this.zip = p.getAddress().getCityInfo().getZip();
         List<HobbyDTO> hobs = new ArrayList();
         for (Hobby hobby : p.getHobbies()) {
             hobs.add(new HobbyDTO(hobby));
         }
         this.hobbies = hobs;
         List<PhoneDTO> phons = new ArrayList();
-        for (Phone phone : p.getInfoEntity().getPhones()){
+        for (Phone phone : p.getPhones()){
             phons.add(new PhoneDTO(phone));
         }
         this.phones = phons;
+        this.id = p.getId();
     }
 
     public PersonDTO(int id, String firstname, String lastname, String email, String street, String additionalinfo, String city, int zip, List<PhoneDTO> ph, List<HobbyDTO> h) {

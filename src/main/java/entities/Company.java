@@ -31,8 +31,6 @@ public class Company implements Serializable {
     private int numOfEmployees;
     private int marketValue;
     
-    @OneToOne(mappedBy = "company")
-    private InfoEntity infoEntity;
 
     public Company() {
     }
