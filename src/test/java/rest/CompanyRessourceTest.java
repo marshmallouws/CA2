@@ -2,6 +2,7 @@ package rest;
 
 import entities.Address;
 import entities.CityInfo;
+import entities.Company;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -38,7 +38,7 @@ import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class PersonRessourceTest {
+public class CompanyRessourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
@@ -65,32 +65,44 @@ public class PersonRessourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
+        
         CityFacade cf = CityFacade.getCityFacade(emf);
         try {
-            cf.getCity(3000);
-        } catch (NoResultException e) {
-            try{
-            cf.addCities();
-            }catch(Exception ex){
-                
-            }
+            if(cf.getCity(3000)==null)
+                cf.addCities();
+        } catch (IOException ex) {
+            
         }
-        CityInfo c = cf.getCity(2300);
         
         EntityManager em = emf.createEntityManager();
          try {
-            em.getTransaction().begin();
-            Phone phone = new Phone("12341", "Home");
-            Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-            Address pa = new Address("Sømoseparken", "80, st., 37", c);
-            List<Hobby> phobbies = new ArrayList();
-            phobbies.add(h);
-            List<Phone> phones = new ArrayList();
-            phones.add(phone);
-  
-            ptest = new Person("test@test.dk","Stallone", "Stalloni", phobbies, phones, pa);
-            em.persist(ptest);
+           CityInfo c = cf.getCity(2300);
+            CityInfo c3 = cf.getCity(6520);
+            CityInfo c4 = cf.getCity(8220);
+            Phone phone3 = new Phone("12341", "Home");
+            Phone phone4 = new Phone("12342", "Home");
+
+            Phone phone7 = new Phone("12342", "Home");
+            Phone phone8 = new Phone("12343", "Home");
             
+            List<Phone> fbphone = new ArrayList();
+            fbphone.add(phone3);
+            fbphone.add(phone4);
+            
+            List<Phone> onep = new ArrayList();
+            onep.add(phone7);
+            onep.add(phone8);
+            
+            Company co = new Company("facebook@mail.dk", "Facebook", "We don't stalk you", "1234", 1000, 90000000, fbphone, new Address("facebookvej", "22", c));
+            Company co1 = new Company("arla@mail.dk", "Arla", "We take calves from their mother so you can get milk", "4321", 231, 8000000, fbphone, new Address("arlavej", "103", c3));
+            Company co2 = new Company("moccamaster@mail.dk", "Moccamaster", "Helping you through the day", "1234", 10, 90000000, fbphone, new Address("facebookvej", "22", c4));
+            Company co3 = new Company("oneplus@mail.dk", "OnePlus", "China runs the world", "1234", 150, 90000000, onep, new Address("facebookvej", "22", c4));
+            
+            em.getTransaction().begin();
+            em.persist(co);
+            em.persist(co1);
+            em.persist(co2);
+            em.persist(co3);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -106,35 +118,13 @@ public class PersonRessourceTest {
     }
     
     @Test
-    public void getAll_PersonsInDB_returnsListSizeGreaterThan0() throws Exception {
+    public void getCompanies_input10_returnsListSizeGreaterThan0() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/person/all").then()
+                .get("/company/employees/10").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(greaterThan(0)));
     }
     
-    
-    @Test
-    public void createPerson_validPerson_idNotNull() throws Exception {
-        String payload = "{\"firstname\":\"Hans\",\"lastname\":\"Hansen\",\"email\":\"test@test.dk\",\"street\": \"Sømoseparken\", \"additionalinfo\": \"80, st., 37\", \"city\": \"Ballerup\",\"zip\": 2750, \"phones\": [{ \"number\": \"12341\", \"description\": \"Home\" }, { \"number\": \"12342\", \"description\": \"Home\" }],\"hobbies\": [ { \"name\": \"Ridning\", \"description\": \"Meget sjovere end badminton!\" }, { \"name\": \"Badminton\", \"description\": \"Det er virkelig kedeligt\" } ]}";
-        given().contentType(ContentType.JSON)
-                .body(payload)
-                .post("/person")
-                .then()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("id", is(not(nullValue())));
-    }
-    
-    @Test
-    public void updatePerson_validPerson_nameChanged() throws Exception {
-        String payload = "{\"id\":\"1\",\"firstname\":\"Søren\",\"lastname\":\"Hansen\",\"email\":\"test@test.dk\",\"street\": \"Sømoseparken\", \"additionalinfo\": \"80, st., 37\", \"city\": \"Ballerup\",\"zip\": 2750, \"phones\": [{ \"number\": \"12341\", \"description\": \"Home\" }, { \"number\": \"12342\", \"description\": \"Home\" }],\"hobbies\": [ { \"name\": \"Ridning\", \"description\": \"Meget sjovere end badminton!\" }, { \"name\": \"Badminton\", \"description\": \"Det er virkelig kedeligt\" } ]}";
-        given().contentType(ContentType.JSON)
-                .body(payload)
-                .put("/person")
-                .then()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("firstname", is("Søren"));
-    }
 }

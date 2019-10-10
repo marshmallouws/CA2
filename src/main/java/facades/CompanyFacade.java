@@ -22,7 +22,7 @@ public class CompanyFacade {
     private static CompanyFacade instance;
     private static EntityManagerFactory emf;
     
-    private static CompanyFacade getCompanyFacade(EntityManagerFactory _emf) {
+    public static CompanyFacade getCompanyFacade(EntityManagerFactory _emf) {
         if(instance == null) {
             emf = _emf;
             instance = new CompanyFacade();
@@ -46,7 +46,7 @@ public class CompanyFacade {
                 res.add(new CompanyDTO(c));
             }
             
-            return query.getResultList();
+            return res;
         } finally {
             em.close();
         }

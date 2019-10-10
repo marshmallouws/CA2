@@ -14,6 +14,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import utils.EMF_Creator;
 
@@ -67,9 +68,9 @@ public class CityFacade {
     public void addCities() throws FileNotFoundException, IOException {
         EntityManager em = getEntityManager();
         System.out.println();
+        
         BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\zipcodes.txt"));
         em.getTransaction().begin();
-        
         String row = "";
         while((row = reader.readLine()) != null) {
             String[] data = row.split(" ", 2);
