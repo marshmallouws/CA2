@@ -6,6 +6,10 @@
 package facades;
 
 import entities.CityInfo;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,12 +49,25 @@ public class CityFacade {
         }
     }
     
-    public static void main(String[] args) {
-        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        List<CityInfo> zip = getCityFacade(emf).getAllZip();
-        for(CityInfo z: zip) {
-            System.out.println(z.getZip() + " " +z.getCity());
+    
+    public void addCities() throws FileNotFoundException, IOException {
+        EntityManager em = getEntityManager();
+        System.out.println();
+        BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\zipcodes.txt"));
+        
+        String row = "";
+        while((row = reader.readLine()) != null) {
+            String[] data = row.split(" ", 2);
+            em.getTransaction().begin();
+            em.persist(new CityInfo(Integer.parseInt(data[0]), data[1]));
+            em.getTransaction().commit();
         }
+        em.close();
+        reader.close();
     }
     
+    public static void main(String[] args) throws IOException {
+        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+        getCityFacade(emf2).addCities();
+    } 
 }

@@ -73,7 +73,7 @@ public class PersonFacade {
         }
     }
 
-    public List<PersonDTO> findByHo(String hobbyname) {
+    public List<PersonDTO> findByHobby(String hobbyname) {
         EntityManager em = getEntityManager();
         try {
 
@@ -176,10 +176,6 @@ public class PersonFacade {
         } finally {
             em.close();
         }
-    }
-
-    public void deletePerson(int id) {
-
     }
 
     public List<PersonDTO> findByZip(int zip) {
