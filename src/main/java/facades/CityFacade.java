@@ -35,7 +35,7 @@ public class CityFacade {
     }
     
     public List<CityInfo> getAllZip() {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<CityInfo> inf = 
                     em.createQuery("SELECT c FROM CityInfo c", CityInfo.class);

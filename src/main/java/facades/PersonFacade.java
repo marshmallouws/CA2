@@ -199,12 +199,4 @@ public class PersonFacade {
             em.close();
         }
     }
-
-    public static void main(String[] args) {
-        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        List<PersonDTO> persons = getPersonFacade(emf2).findByHo("Ridning");
-        for (PersonDTO p : persons) {
-            System.out.println(p.getHobbies() + " " + p.getCity());
-        }
-    }
 }
