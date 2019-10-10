@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,25 +20,34 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "company")
-public class Company implements Serializable {
+public class Company extends InfoEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+
     private String name;
     private String description;
     private String cvr;
     private int numOfEmployees;
     private int marketValue;
-    
 
     public Company() {
     }
 
-    public Company(String name, String description, String cvr, int numOfEmployees, int marketValue) {
+    public Company(String email, String name, String description, String cvr, int numOfEmployees, int marketValue) {
+        setEmail(email);
         this.name = name;
         this.description = description;
+        this.cvr = cvr;
+        this.numOfEmployees = numOfEmployees;
+        this.marketValue = marketValue;
+    }
+    
+    public Company(String email, String name, String description, String cvr, int numOfEmployees, int marketValue, List<Phone> phones, Address address) {
+        setEmail(email);
+        setPhones(phones);
+        setAddress(address);
+        this.name = name;
+        this.description = description; 
         this.cvr = cvr;
         this.numOfEmployees = numOfEmployees;
         this.marketValue = marketValue;
@@ -81,15 +91,6 @@ public class Company implements Serializable {
 
     public void setMarketValue(int marketValue) {
         this.marketValue = marketValue;
-    }
-    
-    
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
     
 }
