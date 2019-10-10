@@ -52,7 +52,12 @@ public class PersonRessource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response edit(PersonDTO entity) {
-           return Response.ok().entity(GSON.toJson(FACADE.updatePerson(entity))).build();
+        try {
+            return Response.ok().entity(GSON.toJson(FACADE.updatePerson(entity))).build();
+        } catch (CityInfoNotFoundException e) {
+            return new CityNotFoundExceptionMapper().toResponse(e);
+        }
+           
     }
  
 }

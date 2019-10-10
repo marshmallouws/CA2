@@ -105,14 +105,13 @@ public class PersonFacade {
             CityInfo city = null;
             try {
                 city = CityFacade.getCityFacade(emf).getCity(p.getZip());
-                System.out.println(city.getId());
             } catch (NoResultException e) {
-                e.printStackTrace();
-            }
-            
-            if(city == null) {
                 throw new CityInfoNotFoundException("Given zip is not found");
             }
+            
+            /*if(city == null) {
+                throw new CityInfoNotFoundException("Given zip is not found");
+            } */
             
             em.getTransaction().begin();
             Address address = new Address(p.getStreet(), p.getAdditionalinfo());
@@ -138,10 +137,17 @@ public class PersonFacade {
         }
     }
 
-    public PersonDTO updatePerson(PersonDTO p) {
+    public PersonDTO updatePerson(PersonDTO p) throws CityInfoNotFoundException {
         EntityManager em = emf.createEntityManager();
+        CityInfo city = null;
 
         try {
+            try {
+                city = CityFacade.getCityFacade(emf).getCity(p.getZip());
+            } catch (NoResultException e) {
+                throw new CityInfoNotFoundException("Given zip is not found");
+            }
+            
             Person person = (Person) em.createQuery("SELECT p FROM Person p WHERE p.id = " + p.getId()).getSingleResult();
 
             List<Hobby> hobbyList = new ArrayList();
@@ -153,6 +159,7 @@ public class PersonFacade {
             for (PhoneDTO pdto : p.getPhones()) {
                 phoneList.add(new Phone(pdto.getNumber(), pdto.getDescription()));
             }
+            
 
             em.getTransaction().begin();
             person.setFirstname(p.getFirstname());
@@ -162,8 +169,9 @@ public class PersonFacade {
             person.setPhones(phoneList);
             person.getAddress().setStreet(p.getStreet());
             person.getAddress().setAdditionalInfo(p.getAdditionalinfo());
-            person.getAddress().getCityInfo().setCity(p.getCity());
-            person.getAddress().getCityInfo().setZip(p.getZip());
+            person.getAddress().setCityInfo(city);
+            //person.getAddress().getCityInfo().setCity(p.getCity());
+            //person.getAddress().getCityInfo().setZip(p.getZip());
 
             em.getTransaction().commit();
 

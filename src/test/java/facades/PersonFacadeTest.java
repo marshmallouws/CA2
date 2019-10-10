@@ -108,7 +108,7 @@ public class PersonFacadeTest {
     }
     
     @Test
-    public void editPerson_validPerson_newValueAdded() {
+    public void editPerson_validPerson_newValueAdded() throws CityInfoNotFoundException {
         PersonDTO edited = new PersonDTO(ptest); 
         edited.setFirstname("Lars");
         edited = facade.updatePerson(edited);
