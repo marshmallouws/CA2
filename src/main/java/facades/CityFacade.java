@@ -54,7 +54,6 @@ public class CityFacade {
     public CityInfo getCity(int zip) throws NoResultException {
         EntityManager em = getEntityManager();
         try {
-            //if(em.createQuery("SELECT c FROM CityInfo c WHERE c.zip = :zip", CityInfo.class).getSingleResult() != null)
             TypedQuery<CityInfo> inf =
                     em.createQuery("SELECT c FROM CityInfo c WHERE c.zip = :zip", CityInfo.class);
             inf.setParameter("zip", zip);

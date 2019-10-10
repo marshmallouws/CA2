@@ -25,7 +25,7 @@ public class Person extends InfoEntity implements Serializable {
 
     private String firstname;
     private String lastname;
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Hobby> hobbies = new ArrayList<>();
     
     public Person() {
