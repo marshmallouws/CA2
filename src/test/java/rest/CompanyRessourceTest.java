@@ -69,10 +69,15 @@ public class CompanyRessourceTest {
         
         CityFacade cf = CityFacade.getCityFacade(emf);
         try {
-            cf.getCity(3000);
-        } catch (NoResultException e) {
             cf.addCities();
+        } catch (IOException ex) {
         }
+        
+//        try {
+//            cf.getCity(3000);
+//        } catch (NoResultException e) {
+//            cf.addCities();
+//        }
         
         EntityManager em = emf.createEntityManager();
          try {

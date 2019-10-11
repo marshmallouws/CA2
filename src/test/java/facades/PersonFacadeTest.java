@@ -70,14 +70,18 @@ public class PersonFacadeTest {
         
         EntityManager em = emf.createEntityManager();
         try {
-            cf.getCity(3000);
-        } catch (NoResultException e) {
-            try{
             cf.addCities();
-            }catch(Exception ex){
-                
-            }
+        } catch (IOException ex) {
         }
+//        try {
+//            cf.getCity(3000);
+//        } catch (NoResultException e) {
+//            try{
+//            cf.addCities();
+//            }catch(Exception ex){
+//                
+//            }
+//        }
         try {
             
             

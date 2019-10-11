@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -67,14 +69,18 @@ public class PersonRessourceTest {
         RestAssured.defaultParser = Parser.JSON;
         CityFacade cf = CityFacade.getCityFacade(emf);
         try {
-            cf.getCity(3000);
-        } catch (NoResultException e) {
-            try{
             cf.addCities();
-            }catch(Exception ex){
-                
-            }
+        } catch (IOException ex) {
         }
+//        try {
+//            cf.getCity(3000);
+//        } catch (NoResultException e) {
+//            try{
+//            cf.addCities();
+//            }catch(Exception ex){
+//                
+//            }
+//        }
         CityInfo c = cf.getCity(2300);
         
         EntityManager em = emf.createEntityManager();
