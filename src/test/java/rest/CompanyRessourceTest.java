@@ -43,7 +43,7 @@ public class CompanyRessourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    
+
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
@@ -54,55 +54,60 @@ public class CompanyRessourceTest {
     }
 
     static Person ptest;
-    
+
     @BeforeAll
     public static void setUpClass() throws IOException {
         //This method must be called before you request the EntityManagerFactory
         EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
-        
+
         httpServer = startServer();
         //Setup RestAssured
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
-        
-        CityFacade cf = CityFacade.getCityFacade(emf);
-        try {
-            cf.addCities();
-        } catch (IOException ex) {
-        }
-        
+
+//        CityFacade cf = CityFacade.getCityFacade(emf);
+//        try {
+//            cf.addCities();
+//        } catch (IOException ex) {
+//        }
+
 //        try {
 //            cf.getCity(3000);
 //        } catch (NoResultException e) {
 //            cf.addCities();
 //        }
-        
         EntityManager em = emf.createEntityManager();
-         try {
-           CityInfo c = cf.getCity(2300);
-            CityInfo c3 = cf.getCity(6520);
-            CityInfo c4 = cf.getCity(8220);
+        try {
+            em.getTransaction().begin();
+            CityInfo c = new CityInfo(2300, "København s");
+            CityInfo c3 = new CityInfo(6520, "Miami");
+            CityInfo c4 = new CityInfo(8220, "Narnia");
+            em.persist(c);
+            em.persist(c3);
+            em.persist(c4);
+            em.getTransaction().commit();
+
             Phone phone3 = new Phone("12341", "Home");
             Phone phone4 = new Phone("12342", "Home");
 
             Phone phone7 = new Phone("12342", "Home");
             Phone phone8 = new Phone("12343", "Home");
-            
+
             List<Phone> fbphone = new ArrayList();
             fbphone.add(phone3);
             fbphone.add(phone4);
-            
+
             List<Phone> onep = new ArrayList();
             onep.add(phone7);
             onep.add(phone8);
-            
+
             Company co = new Company("facebook@mail.dk", "Facebook", "We don't stalk you", "1234", 1000, 90000000, fbphone, new Address("facebookvej", "22", c));
             Company co1 = new Company("arla@mail.dk", "Arla", "We take calves from their mother so you can get milk", "4321", 231, 8000000, fbphone, new Address("arlavej", "103", c3));
             Company co2 = new Company("moccamaster@mail.dk", "Moccamaster", "Helping you through the day", "1234", 10, 90000000, fbphone, new Address("facebookvej", "22", c4));
             Company co3 = new Company("oneplus@mail.dk", "OnePlus", "China runs the world", "1234", 150, 90000000, onep, new Address("facebookvej", "22", c4));
-            
+
             em.getTransaction().begin();
             em.persist(co);
             em.persist(co1);
@@ -113,15 +118,15 @@ public class CompanyRessourceTest {
             em.close();
         }
     }
-    
+
     @AfterAll
-    public static void closeTestServer(){
+    public static void closeTestServer() {
         //System.in.read();
-         //Don't forget this, if you called its counterpart in @BeforeAll
-         EMF_Creator.endREST_TestWithDB();
-         httpServer.shutdownNow();
+        //Don't forget this, if you called its counterpart in @BeforeAll
+        EMF_Creator.endREST_TestWithDB();
+        httpServer.shutdownNow();
     }
-    
+
     @Test
     public void getCompanies_input10_returnsListSizeGreaterThan0() throws Exception {
         given()
@@ -131,5 +136,5 @@ public class CompanyRessourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(greaterThan(0)));
     }
-    
+
 }

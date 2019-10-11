@@ -67,11 +67,11 @@ public class PersonRessourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
-        CityFacade cf = CityFacade.getCityFacade(emf);
-        try {
-            cf.addCities();
-        } catch (IOException ex) {
-        }
+//        CityFacade cf = CityFacade.getCityFacade(emf);
+//        try {
+//            cf.addCities();
+//        } catch (IOException ex) {
+//        }
 //        try {
 //            cf.getCity(3000);
 //        } catch (NoResultException e) {
@@ -81,10 +81,15 @@ public class PersonRessourceTest {
 //                
 //            }
 //        }
-        CityInfo c = cf.getCity(2300);
+//        CityInfo c = cf.getCity(2300);
         
         EntityManager em = emf.createEntityManager();
          try {
+            em.getTransaction().begin();
+            CityInfo c = new CityInfo(2300, "København S");
+            em.persist(c);
+            em.getTransaction().commit();
+             
             em.getTransaction().begin();
             Phone phone = new Phone("12341", "Home");
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");

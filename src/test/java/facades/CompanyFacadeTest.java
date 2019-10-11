@@ -69,14 +69,15 @@ public class CompanyFacadeTest {
     public static void setUpClassV2() throws IOException {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = CompanyFacade.getCompanyFacade(emf);
-        cf = CityFacade.getCityFacade(emf);
-        
         EntityManager em = emf.createEntityManager();
-        try {
-            cf.addCities();
-        } catch (IOException ex) {
-            
-        }
+//        cf = CityFacade.getCityFacade(emf);
+//        
+//        
+//        try {
+//            cf.addCities();
+//        } catch (IOException ex) {
+//            
+//        }
 //        try {
 //            cf.getCity(3000);
 //        } catch (NoResultException e) {
@@ -87,9 +88,15 @@ public class CompanyFacadeTest {
 //            }
 //        }
         try {
-            CityInfo c = cf.getCity(2300);
-            CityInfo c3 = cf.getCity(6520);
-            CityInfo c4 = cf.getCity(8220);
+            em.getTransaction().begin();
+            CityInfo c = new CityInfo(2300, "København s");
+            CityInfo c3 = new CityInfo(6520, "Miami");
+            CityInfo c4 = new CityInfo(8220, "Narnia");
+            em.persist(c);
+            em.persist(c3);
+            em.persist(c4);
+            em.getTransaction().commit();
+
             Phone phone3 = new Phone("12341", "Home");
             Phone phone4 = new Phone("12342", "Home");
 
@@ -134,8 +141,4 @@ public class CompanyFacadeTest {
             assertThat(dto.getNumOfEmployees(),is(greaterThan(10)));
         }
     }
-    
-    
-    
-
 }

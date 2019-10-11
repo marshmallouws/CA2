@@ -65,12 +65,12 @@ public class CityFacade {
         }
     }
     
-    
+    //Should only be used locally
     public void addCities() throws FileNotFoundException, IOException {
         EntityManager em = getEntityManager();
         System.out.println();
         
-        BufferedReader reader = new BufferedReader(new FileReader("\\zipcodes.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\zipcodes.txt"));
         em.getTransaction().begin();
         String row = "";
         while((row = reader.readLine()) != null) {

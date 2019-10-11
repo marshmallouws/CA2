@@ -69,10 +69,10 @@ public class PersonFacadeTest {
         cf = CityFacade.getCityFacade(emf);
         
         EntityManager em = emf.createEntityManager();
-        try {
-            cf.addCities();
-        } catch (IOException ex) {
-        }
+//        try {
+//            cf.addCities();
+//        } catch (IOException ex) {
+//        }
 //        try {
 //            cf.getCity(3000);
 //        } catch (NoResultException e) {
@@ -84,12 +84,15 @@ public class PersonFacadeTest {
 //        }
         try {
             
+            em.getTransaction().begin();
+            CityInfo c = new CityInfo(2300, "København S");
+            em.persist(c);
+            em.getTransaction().commit();
             
-            CityInfo city = cf.getCity(2300);
             em.getTransaction().begin();
             Phone phone = new Phone("12341", "Home");
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
-            Address pa = new Address("Sømoseparken", "80, st., 37", city);
+            Address pa = new Address("Sømoseparken", "80, st., 37", c);
             List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
             List<Phone> phones = new ArrayList();
