@@ -22,6 +22,7 @@ import utils.EMF_Creator;
  *
  * @author Annika
  */
+//Somethign
 public class CityFacade {
     private static CityFacade instance;
     private static EntityManagerFactory emf;
