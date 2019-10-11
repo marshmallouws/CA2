@@ -127,10 +127,10 @@ public class PersonFacade {
             Person person = new Person(p.getEmail(), p.getFirstname(), p.getLastname(), hobbies, phones, address);
             em.getTransaction().begin();
             // Using merge to ensure that there won't be duplicate hobbies.
-            em.merge(person);
+            Person res = em.merge(person);
             em.getTransaction().commit();
-            
-            return new PersonDTO(person);
+            System.out.println(res.getId());
+            return new PersonDTO(res);
         } finally {
 
         }
@@ -154,7 +154,7 @@ public class PersonFacade {
             for (HobbyDTO h : hobbies) {
                 try {
                     Hobby hobby = HobbyFacade.getHobbyFacade(emf).getHobby(h.getName());
-                    //hobbyList.add(hobby);
+                    hobbyList.add(hobby);
                 } catch (NoResultException e) {
                     hobbyList.add(new Hobby(h.getName(), h.getDescription()));
                 }
@@ -164,9 +164,6 @@ public class PersonFacade {
             for (PhoneDTO pdto : p.getPhones()) {
                 phoneList.add(new Phone(pdto.getNumber(), pdto.getDescription()));
             }
-            
-
-            em.getTransaction().begin();
             person.setFirstname(p.getFirstname());
             person.setLastname(p.getLastname());
             person.setEmail(p.getEmail());
@@ -175,9 +172,12 @@ public class PersonFacade {
             person.getAddress().setStreet(p.getStreet());
             person.getAddress().setAdditionalInfo(p.getAdditionalinfo());
             person.getAddress().setCityInfo(city);
+
+            em.getTransaction().begin();
+            Person res = em.merge(person);
             em.getTransaction().commit();
 
-            return new PersonDTO(person);
+            return new PersonDTO(res);
         } finally {
             em.close();
         }
@@ -204,7 +204,7 @@ public class PersonFacade {
     public static void main(String[] args) throws CityInfoNotFoundException {
         EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         PersonDTO person = getPersonFacade(emf2).getAllPersons().get(0);
-        /*List<HobbyDTO> hobbies = new ArrayList<>();
+        List<HobbyDTO> hobbies = new ArrayList<>();
         hobbies.add(new HobbyDTO(new Hobby("Ridning", "Something")));
         hobbies.add(new HobbyDTO(new Hobby("Klatring", "#klatretøsen")));
         
@@ -212,7 +212,7 @@ public class PersonFacade {
         person.setHobbies(hobbies);
         person.setFirstname("Gokke Jokke");
         getPersonFacade(emf2).updatePerson(person);
-        */
+        
         Person p = new Person("lotte@mail.dk", "Frau", "Lotte");
         List<Hobby> h = new ArrayList<>();
         h.add(new Hobby("Ridning", "Somethigbn"));

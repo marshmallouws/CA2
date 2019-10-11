@@ -1,16 +1,12 @@
 package facades;
 
 import dto.CompanyDTO;
-import dto.PersonDTO;
 import entities.Address;
 import entities.CityInfo;
 import entities.Company;
-import entities.Hobby;
-import entities.InfoEntity;
 import utils.EMF_Creator;
 import entities.Person;
 import entities.Phone;
-import exceptions.CityInfoNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +17,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import utils.Settings;
-import utils.EMF_Creator.DbSelector;
-import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled

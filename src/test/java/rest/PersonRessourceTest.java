@@ -11,7 +11,6 @@ import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,12 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator.DbSelector;
@@ -82,9 +79,11 @@ public class PersonRessourceTest {
             em.getTransaction().begin();
             Phone phone = new Phone("12341", "Home");
             Hobby h = new Hobby("Badminton", "Det er virkelig kedeligt");
+            Hobby h1 = new Hobby("Fiskning", "SO FUN!");
             Address pa = new Address("Sømoseparken", "80, st., 37", c);
             List<Hobby> phobbies = new ArrayList();
             phobbies.add(h);
+            phobbies.add(h1);
             List<Phone> phones = new ArrayList();
             phones.add(phone);
   
@@ -126,6 +125,7 @@ public class PersonRessourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("id", is(not(nullValue())));
     }
+    
     
     @Test
     public void updatePerson_validPerson_nameChanged() throws Exception {
