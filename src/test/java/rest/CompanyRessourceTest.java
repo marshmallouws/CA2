@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -55,7 +56,7 @@ public class CompanyRessourceTest {
     static Person ptest;
     
     @BeforeAll
-    public static void setUpClass() {
+    public static void setUpClass() throws IOException {
         //This method must be called before you request the EntityManagerFactory
         EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
@@ -68,10 +69,9 @@ public class CompanyRessourceTest {
         
         CityFacade cf = CityFacade.getCityFacade(emf);
         try {
-            if(cf.getCity(3000)==null)
-                cf.addCities();
-        } catch (IOException ex) {
-            
+            cf.getCity(3000);
+        } catch (NoResultException e) {
+            cf.addCities();
         }
         
         EntityManager em = emf.createEntityManager();
