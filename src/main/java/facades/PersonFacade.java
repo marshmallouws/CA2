@@ -5,22 +5,16 @@ import dto.PersonDTO;
 import dto.PhoneDTO;
 import entities.Address;
 import entities.CityInfo;
-import entities.InfoEntity;
 import entities.Hobby;
 import entities.Phone;
 import entities.Person;
 import exceptions.CityInfoNotFoundException;
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import utils.EMF_Creator;
-import java.lang.reflect.*;
-import java.util.Arrays;
 import javax.persistence.NoResultException;
 
 public class PersonFacade {

@@ -35,6 +35,12 @@ public class PersonRessource {
     public Response getAll() {
         return Response.ok().entity(GSON.toJson(FACADE.getAllPersons())).build();
     }
+    
+    @GET
+    @Path("/{hobby}")
+    public Response getPersonsByHobby(@PathParam("hobby") String hobby) {
+        return Response.ok().entity(GSON.toJson(FACADE.findByHobby(hobby))).build();
+    }
 
     
     @POST
